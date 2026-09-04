@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #products {
+            display: flex;
+            gap: 20px;
+        }
+
+        .cards {
+            height: auto;
+            width: 300px;
+            border: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 20px 10px rgbs(190, 186, 186, 0.8);
+            cursor: pointer;
+        }
+
+        .cards button {
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>All Products</h2>
+    <div id="products">
+
+    </div>
+
+
+    <h2>My carts</h2>
+    <div id="cart">
+
+        
+    </div>
+
+
+
+    <script>
+        let products = [
+            { id: 1, title: "product 1", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgI3fF6_ebdidZr1lnTEvKusZLVuw2ZKsrhm_Xtxn6ZdQlOo9PBRq1v2VW&s=10", price: 100 },
+            { id: 2, title: "product 2", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOd1Im5E9tSz6ITdT2uzgykTDWwiyqqyakgj87P5IZYniWucfwIbhRhK4&s=10", price: 200 },
+            { id: 3, title: "product 3", image: "https://static.vecteezy.com/vite/assets/photo-masthead-375-BoK_p8LG.webp", price: 300 },
+        ]
+
+        let cart = JSON.parse(localStorage.getItem("cart")) || []
+        console.log("cart from localstorage :-", cart);
+
+        const showProducts = () => {
+            products.forEach((p) => {
+                let products = document.getElementById('products').innerHTML +=
+                    `
+            <div class="cards">
+                <img src=${p.image} height="200px" width="200px"  />
+                <h1>${p.title} </h1>
+                <h4> ${p.price}rs</h4>
+                <button onclick="addTocart(${p.id})">Add to cart</button>
+                </div>
+            `
+
+            })
+        }
+
+        showProducts();
+
+        function addTocart(id) {
+            let product = products.find((p) => p.id === id)
+            let item = cart.find((p) => p.id === id)
+            if (item) {
+                item.qty += 1
+                console.log("done 1")
+            } else {
+
+                cart.push({
+                    ...product,
+                    qty: 1
+                })
+                console.log("done 2")
+            }
+            savecart()
+            showCart()
+        }
+
+        function savecart() {
+            localStorage.setItem("cart", JSON.stringify(cart))
+        }
+
+        function showCart() {
+            document.getElementById('cart').innerHTML = cart.map((p) => (
+                `
+                 <div class="cards">
+                <img src=${p.image} height="200px" width="200px"  />
+                <h1>${p.title} </h1>
+                <h4> ${p.price}rs</h4>
+                <h4> ${p.qty}</h4>
+                <button">+</button>
+                <button">-</button>
+                </div>
+                `
+            ))
+        }
+        showCart()
+    </script>
+</body>
+
+</html>
